@@ -1,0 +1,76 @@
+class TttGame():
+   
+    def __init__(self, p1Name="player1", p2Name="player2"):
+        self.gameBoard = TttBoard()
+        self.player1 = TttPlayer(p1Name)
+        self.player2 = TttPlayer(p2Name)
+        self.turn = True
+   
+    def makeMove(self, x, y):
+        if self.turn:
+            self.gameBoard.moves[y][x] = 1
+            self.turn = False
+            self.printBoard()
+            self.checkBoard()
+        else:
+            self.gameBoard.moves[y][x] = 2
+            self.turn = True
+            self.printBoard()
+            self.checkBoard()
+       
+    def checkBoard(self):
+        # 3 rows, 3 columns, 2 diagonals
+        someoneWins = 0
+        #rows
+        for r in [0,1,2]:
+            if self.gameBoard.moves[r][0] == self.gameBoard.moves[r][1] == self.gameBoard.moves[r][2]:
+                someoneWins = self.gameBoard.moves[r][0]
+        #columns
+        for c in [0,1,2]:
+            if self.gameBoard.moves[0][c] == self.gameBoard.moves[1][c] == self.gameBoard.moves[2][c]:
+                someoneWins = self.gameBoard.moves[0][c]
+        #diags
+        if self.gameBoard.moves[0][0] == self.gameBoard.moves[1][1] == self.gameBoard.moves[2][2]:
+            someoneWins = self.gameBoard.moves[1][1]
+        if self.gameBoard.moves[0][2] == self.gameBoard.moves[1][1] == self.gameBoard.moves[2][0]:
+            someoneWins = self.gameBoard.moves[1][1]
+       
+        if someoneWins == 1:
+            print(f"{self.player1.name} wins!")
+            self.player1.wins += 1
+            self.gameBoard.reset()
+        elif someoneWins == 2:
+            print(f"{self.player2.name} wins!")
+            self.player2.wins += 1
+            self.gameBoard.reset()
+   
+    def printBoard(self):
+        boardgrid = ""
+        for r in self.gameBoard.moves:
+            boardline = ""
+            for c in r:
+                if c == 0:
+                    boardline += "= "
+                if c == 1:
+                    boardline += "X "
+                if c == 2:
+                    boardline += "O "
+            boardline += "\n"
+            boardgrid += boardline
+        print(boardgrid)
+               
+
+class TttBoard():
+
+    def __init__(self):
+        self.moves = [[0,0,0],[0,0,0],[0,0,0]]
+   
+    def reset(self):
+        self.moves = [[0,0,0],[0,0,0],[0,0,0]]
+       
+   
+class TttPlayer():
+   
+    def __init__(self, name):
+        self.name = name
+        self.wins = 0
