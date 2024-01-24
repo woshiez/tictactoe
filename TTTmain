@@ -8,12 +8,12 @@ class TttGame():
    
     def makeMove(self, x, y):
         if self.turn:
-            self.gameBoard.moves[y][x] = 1
+            self.gameBoard.moves[2-y][x] = 1
             self.turn = False
             self.printBoard()
             self.checkBoard()
         else:
-            self.gameBoard.moves[y][x] = 2
+            self.gameBoard.moves[2-y][x] = 2
             self.turn = True
             self.printBoard()
             self.checkBoard()
